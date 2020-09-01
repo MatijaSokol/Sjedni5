@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "40019409812",
+    "firebase_url": "https://sjedni-5.firebaseio.com",
+    "project_id": "sjedni-5",
+    "storage_bucket": "sjedni-5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40019409812:android:cb5514125c79a98071ad81",
+        "android_client_info": {
+          "package_name": "hr.ferit.matijasokol.sjedni5"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40019409812-o16j6hgoo9ad421bodr0eutcqrlp07ol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3rcZfXi5q9uaTXw9vGsWKIqfaaLhxUS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "40019409812-o16j6hgoo9ad421bodr0eutcqrlp07ol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">Sjedni 5</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="network_failure">Network failure</string>
+    <string name="conversion_error">Conversion error</string>
+    <string name="save">Save</string>
+    <string name="name">Name</string>
+    <string name="dialog_title">Save your score</string>
+    <string name="score">Score</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="submit">Submit</string>
+    <string name="question">Question</string>
+    <string name="ranking">Ranking</string>
+    <string name="category">Category</string>
+    <string name="level">Level</string>
+    <string name="menu">Menu</string>
+    <string name="enter_name">Please enter name</string>
+    <string name="instructions">Instructions</string>
+    <string name="update_questions_terms">Update questions and terms</string>
+    <string name="close_quiz">Close quiz?</string>
+    <string name="progress_not_saved">Progress will not be saved!</string>
+    <string name="instruction1">To confirm answer, click twice on button</string>
+    <string name="instruction2">Click question button to open joker menu</string>
+    <string name="instruction3">Shake device to activate skip joker</string>
+    <string name="instruction4">After clicking on correct answer, click on check mark to open new question or click on info button to see more about this question</string>
+    <string name="skip">Skip</string>
+    <string name="show_instructions">Show instructions on start</string>
+    <string name="int_conn_need_new_data">Internet connection needed for fetching new data!</string>
+    <string name="int_conn_need_submit_result">Internet connection needed for submitting result!</string>
+    <string name="data_empty_int_conn_need_new_data">Data is empty. Internet connection needed for fetching new data!</string>
+    <string name="empty_list">No one has confirmed result yet</string>
+    <string name="skip_joker_used">Skip question joker used</string>
+    <string name="half_half_joker_used">50% joker used</string>
+    <string name="swap_joker_used">Swap question joker used</string>
+    <string name="go_to_menu_page">Go to the menu page?</string>
+    <string name="result_will_not_be_saved">Result will not be saved if you go back!</string>
+    <string name="cancel">Cancel</string>
+    <string name="info">Info</string>
+    <string name="you_can_do_it_better">You can do it better!</string>
+    <string name="average_result">Average result. Try again for a better result!</string>
+    <string name="int_conn_need_show_info">Internet connection needed for showing info!</string>
+    <string name="number_of_allowed_mistakes">Number of allowed mistakes: </string>
+    <string name="term">Term</string>
+    <string name="login">Login</string>
+    <string name="category1">Computers</string>
+    <string name="category2">History</string>
+    <string name="category3">Guess term</string>
+    <string name="question_deleted">Question successfully deleted!</string>
+    <string name="term_deleted">Term successfully deleted!</string>
+    <string name="inputs_empty">One or more inputs are empty</string>
+    <string name="correct_answer_not_valid">Correct answer is not valid</string>
+    <string name="url_not_valid">URL is not valid</string>
+    <string name="text">Text</string>
+    <string name="correct_answer">Correct answer</string>
+    <string name="question_text">Question text</string>
+    <string name="answer_1">Answer 1</string>
+    <string name="answer_2">Answer 2</string>
+    <string name="answer_3">Answer 3</string>
+    <string name="answer_4">Answer 4</string>
+    <string name="correctanswer">Correct Answer</string>
+    <string name="url">URL</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="username_password_incorrect">Username or password incorrect</string>
+    <string name="questions_terms">Questions and Terms</string>
+    <string name="int_conn_need_add_quest_terms">Internet connection needed for adding new questions and terms</string>
+    <string name="int_conn_need_login">Internet connection needed for login</string>
+    <string name="excellent_result">Excellent result</string>
+    <string name="total">Total</string>
+    <string name="quiz">Quiz</string>
+    <string name="rang_list">Rang list</string>
+    <string name="joker">Joker</string>
+
+    <string-array name="categories">
+        <item>@string/category1</item>
+        <item>@string/category2</item>
+    </string-array>
+
+    <string-array name="levels">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/settings"
+        app:showAsAction="never"
+        android:title="@string/update_questions_terms"
+        android:icon="@drawable/ic_sync" />
+
+    <item
+        android:id="@+id/instructions"
+        app:showAsAction="never"
+        android:title="@string/show_instructions"
+        android:checkable="true" />
+
+    <item
+        android:id="@+id/login"
+        app:showAsAction="never"
+        android:title="@string/login" />
+
+</menu>
