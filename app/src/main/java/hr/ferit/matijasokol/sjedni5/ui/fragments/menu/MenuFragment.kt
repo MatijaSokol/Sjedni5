@@ -89,6 +89,14 @@ class MenuFragment : BaseFragment(R.layout.fragment_menu) {
     }
 
     private fun setObservers() {
+        viewModel.questionResponse.observe(viewLifecycleOwner, Observer { response ->
+            when(response) {
+                is Resource.Loading -> {
+                    progress.visible()
+                }
+            }
+        })
+
         viewModel.termResponse.observe(viewLifecycleOwner, Observer { response ->
             when(response) {
                 is Resource.Loading -> {

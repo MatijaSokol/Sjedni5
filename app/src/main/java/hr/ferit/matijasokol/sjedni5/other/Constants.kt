@@ -13,7 +13,7 @@ object Constants {
 
     const val IMAGES = "images/"
     const val IMAGE_NAME_FIELD = "imageName"
-    const val FIREBASE_STORAGE_IMAGE_QUALITY = 25
+    const val FIREBASE_STORAGE_IMAGE_QUALITY = 50
 
     const val ONE_MEGABYTE = 1024*1024L
 
