@@ -76,10 +76,9 @@ class GuessTermViewModel @ViewModelInject constructor(
                         term.image = BitmapFactory.decodeByteArray(array, 0, array.size)
                     }
                     repository.deleteAllTerms()
-                    var db = repository.getTermsFromDb()
                     repository.insertTerms(terms)
-                    db = repository.getTermsFromDb()
-                    _terms.postValue(Resource.Success(terms))
+                    val newTerms = repository.getTermsFromDb()
+                    _terms.postValue(Resource.Success(newTerms))
                 } else {
                     _terms.postValue(Resource.Error(getApplication<QuizApp>().getString(R.string.data_empty_int_conn_need_new_data)))
                 }

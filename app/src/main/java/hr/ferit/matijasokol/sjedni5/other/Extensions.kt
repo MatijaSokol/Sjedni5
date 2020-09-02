@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 fun View.visible() {
     this.visibility = View.VISIBLE
@@ -74,7 +75,13 @@ fun ImageView.setImageWithAnimation(context: Context, bitmap: Bitmap) {
 fun Context.getUriExtension(uri: Uri) = MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(uri))
 
 fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
-    val tmp = this[index1]
-    this[index1] = this[index2]
-    this[index2] = tmp
+    if (index1 < index2) {
+        for (i in index1 until index2) {
+            Collections.swap(this, i, i + 1)
+        }
+    } else {
+        for (i in index1 downTo index2 + 1) {
+            Collections.swap(this, i, i - 1)
+        }
+    }
 }
