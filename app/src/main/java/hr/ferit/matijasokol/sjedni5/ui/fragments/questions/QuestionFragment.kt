@@ -7,6 +7,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -96,7 +97,8 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
         btnInfo.setOnClickListener {
             if (hasInternetConnection(requireContext())) {
                 val bottomSheetWebView = InfoBottomSheet(requireContext())
-                bottomSheetWebView.showWithUrl(getCurrentQuestionUrl())
+                val url = if (viewModel.thirdJokerClicked) jokerQuestion.url else getCurrentQuestionUrl()
+                bottomSheetWebView.showWithUrl(url)
             } else {
                 root.showSnackbar(getString(R.string.int_conn_need_show_info), Snackbar.LENGTH_LONG)
             }
@@ -151,6 +153,8 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
 
     private fun findCorrectAnswerIndex() = answers.indexOfFirst { it.button.text == questions[viewModel.currentQuestion].correctAnswer }
 
+    private val TAG = "[DEBUG] QuestionFra"
+
     private fun onFirstJokerClicked() {
         requireContext().displayMessage(getString(R.string.half_half_joker_used))
 
@@ -158,9 +162,22 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
         viewModel.firstJokerUsed = true
 
         val allButtons = answers.map { it.button }
-        val correctAnswerIndex = findCorrectAnswerIndex()
-        val firstIncorrectIndex = getRandomNumberExcept(0, allButtons.size, correctAnswerIndex)
-        val secondIncorrectIndex = getRandomNumberExcept(0, allButtons.size, correctAnswerIndex, firstIncorrectIndex)
+
+        var firstIncorrectIndex = 0
+        var secondIncorrectIndex = 0
+
+        if (viewModel.thirdJokerClicked) {
+            val answers = listOf(jokerQuestion.answer1, jokerQuestion.answer2, jokerQuestion.answer3, jokerQuestion.answer4)
+            val correctAnswerIndex = answers.indexOf(jokerQuestion.correctAnswer)
+
+            firstIncorrectIndex = getRandomNumberExcept(0, allButtons.size, correctAnswerIndex)
+            secondIncorrectIndex = getRandomNumberExcept(0, allButtons.size, correctAnswerIndex, firstIncorrectIndex)
+        } else {
+            val correctAnswerIndex = findCorrectAnswerIndex()
+
+            firstIncorrectIndex = getRandomNumberExcept(0, allButtons.size, correctAnswerIndex)
+            secondIncorrectIndex = getRandomNumberExcept(0, allButtons.size, correctAnswerIndex, firstIncorrectIndex)
+        }
 
         allButtons.apply {
             get(firstIncorrectIndex).apply {
@@ -197,6 +214,7 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
 
         lottie.gone()
         btnInfo.gone()
+        viewModel.thirdJokerClicked = false
         viewModel.incrementCurrentQuestion()
     }
 
@@ -238,7 +256,6 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
             if (jokerQuestion.correctAnswer == answerText) {
                 viewModel.incrementScore()
                 showLottieAnimation(LOTTIE_CORRECT_FILE_NAME)
-                viewModel.thirdJokerClicked = false
             } else {
                 viewModel.end = true
                 showLottieAnimation(LOTTIE_INCORRECT_FILE_NAME)
