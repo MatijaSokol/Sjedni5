@@ -243,6 +243,7 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
                 viewModel.end = true
                 showLottieAnimation(LOTTIE_INCORRECT_FILE_NAME)
             }
+            answers.filter { it.button.text == jokerQuestion.correctAnswer }[0].button.setBackgroundResource(R.drawable.question_shape_correct)
         } else {
             if (questions[viewModel.currentQuestion].correctAnswer == answerText) {
                 viewModel.incrementScore()
@@ -251,8 +252,8 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
                 viewModel.end = true
                 showLottieAnimation(LOTTIE_INCORRECT_FILE_NAME)
             }
+            answers[findCorrectAnswerIndex()].button.setBackgroundResource(R.drawable.question_shape_correct)
         }
-        answers[findCorrectAnswerIndex()].button.setBackgroundResource(R.drawable.question_shape_correct)
     }
 
     private fun skipQuestion() {
