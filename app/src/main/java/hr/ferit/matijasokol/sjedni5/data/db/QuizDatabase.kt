@@ -1,4 +1,4 @@
-package hr.ferit.matijasokol.sjedni5.db
+package hr.ferit.matijasokol.sjedni5.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

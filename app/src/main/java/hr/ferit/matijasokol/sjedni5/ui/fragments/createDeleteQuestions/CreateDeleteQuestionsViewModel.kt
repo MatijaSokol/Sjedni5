@@ -17,20 +17,20 @@ class CreateDeleteQuestionsViewModel @ViewModelInject constructor(
     private val repository: QuizRepository
 ) : AndroidViewModel(app) {
 
-    private val _questionDeleteResponse = MutableLiveData<Resource<Boolean>>()
+    private val _questionDeleteResponse = MutableLiveData<Resource<Unit>>()
 
-    val questionDeleteResponse: LiveData<Resource<Boolean>>
+    val questionDeleteResponse: LiveData<Resource<Unit>>
         get() = _questionDeleteResponse
 
-    private val _termDeleteResponse = MutableLiveData<Resource<Boolean>>()
+    private val _termDeleteResponse = MutableLiveData<Resource<Unit>>()
 
-    val termDeleteResponse: LiveData<Resource<Boolean>>
+    val termDeleteResponse: LiveData<Resource<Unit>>
         get() = _termDeleteResponse
 
     fun deleteQuestion(documentSnapshot: DocumentSnapshot) = viewModelScope.launch(IO) {
         try {
             repository.deleteQuestion(documentSnapshot)
-            _questionDeleteResponse.postValue(Resource.Success(true))
+            _questionDeleteResponse.postValue(Resource.Success(Unit))
         } catch (t: Throwable) {
             _questionDeleteResponse.postValue(
                 Resource.Error(getApplication<QuizApp>().getString(
@@ -41,9 +41,8 @@ class CreateDeleteQuestionsViewModel @ViewModelInject constructor(
 
     fun deleteTerm(term: Term, documentSnapshot: DocumentSnapshot) = viewModelScope.launch(IO) {
         try {
-            repository.deleteImage(term.imageName)
-            repository.deleteTerm(documentSnapshot)
-            _termDeleteResponse.postValue(Resource.Success(true))
+            repository.deleteTerm(term, documentSnapshot)
+            _termDeleteResponse.postValue(Resource.Success(Unit))
         } catch (t: Throwable) {
             _termDeleteResponse.postValue(
                 Resource.Error(getApplication<QuizApp>().getString(

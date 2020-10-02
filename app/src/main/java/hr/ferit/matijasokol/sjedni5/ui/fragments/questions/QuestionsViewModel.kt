@@ -1,7 +1,6 @@
 package hr.ferit.matijasokol.sjedni5.ui.fragments.questions
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -13,8 +12,6 @@ import hr.ferit.matijasokol.sjedni5.app.QuizApp
 import hr.ferit.matijasokol.sjedni5.models.Categories
 import hr.ferit.matijasokol.sjedni5.models.Question
 import hr.ferit.matijasokol.sjedni5.models.Resource
-import hr.ferit.matijasokol.sjedni5.other.Constants
-import hr.ferit.matijasokol.sjedni5.other.Constants.INSTRUCTIONS_KEY
 import hr.ferit.matijasokol.sjedni5.other.hasInternetConnection
 import hr.ferit.matijasokol.sjedni5.repositories.QuizRepository
 import kotlinx.coroutines.Dispatchers.IO

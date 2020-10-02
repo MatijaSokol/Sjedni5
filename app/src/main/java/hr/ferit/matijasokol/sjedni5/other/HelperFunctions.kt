@@ -12,7 +12,6 @@ import hr.ferit.matijasokol.sjedni5.other.Constants.THUMBNAIL_SIZE
 import kotlin.math.floor
 import kotlin.random.Random
 
-
 fun getRandomNumberExcept(from: Int, until: Int, vararg except: Int): Int {
     var number = Random.nextInt(from, until)
     while (except.contains(number)) {

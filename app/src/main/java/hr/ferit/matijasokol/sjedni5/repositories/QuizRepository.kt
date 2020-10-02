@@ -1,83 +1,62 @@
 package hr.ferit.matijasokol.sjedni5.repositories
 
 import android.content.ContentResolver
-import android.graphics.Bitmap
 import android.net.Uri
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.storage.StorageReference
-import hr.ferit.matijasokol.sjedni5.db.QuestionDao
-import hr.ferit.matijasokol.sjedni5.db.TermDao
+import hr.ferit.matijasokol.sjedni5.data.db.QuestionDao
+import hr.ferit.matijasokol.sjedni5.data.db.TermDao
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageSource
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreSource
 import hr.ferit.matijasokol.sjedni5.models.Categories
 import hr.ferit.matijasokol.sjedni5.models.Player
 import hr.ferit.matijasokol.sjedni5.models.Question
 import hr.ferit.matijasokol.sjedni5.models.Term
-import hr.ferit.matijasokol.sjedni5.other.Constants.ADMINS_COLLECTION
-import hr.ferit.matijasokol.sjedni5.other.Constants.FIREBASE_STORAGE_IMAGE_QUALITY
-import hr.ferit.matijasokol.sjedni5.other.Constants.IMAGES
-import hr.ferit.matijasokol.sjedni5.other.Constants.IMAGE_NAME_FIELD
-import hr.ferit.matijasokol.sjedni5.other.Constants.ONE_MEGABYTE
-import hr.ferit.matijasokol.sjedni5.other.Constants.PLAYERS_COLLECTION
-import hr.ferit.matijasokol.sjedni5.other.Constants.QUESTION_COLLECTION
-import hr.ferit.matijasokol.sjedni5.other.Constants.TERMS_COLLECTION
-import hr.ferit.matijasokol.sjedni5.other.getThumbnail
-import kotlinx.coroutines.tasks.await
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
-import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class QuizRepository @Inject constructor(
     private val questionDao: QuestionDao,
     private val termDao: TermDao,
-    @Named(QUESTION_COLLECTION) private val questionsCollectionReference: CollectionReference,
-    @Named(PLAYERS_COLLECTION) private val playersCollectionReference: CollectionReference,
-    @Named(TERMS_COLLECTION) private val termsCollectionReference: CollectionReference,
-    @Named(ADMINS_COLLECTION) private val adminsCollectionReference: CollectionReference,
-    private val storageReference: StorageReference
+    private val firestoreSource: FirestoreSource,
+    private val firebaseStorageSource: FirebaseStorageSource
 ) {
 
-    suspend fun getQuestions(): QuerySnapshot = questionsCollectionReference.get().await()
+    suspend fun getQuestions(): QuerySnapshot = firestoreSource.getQuestions()
 
-    suspend fun getTerms(): QuerySnapshot = termsCollectionReference.get().await()
+    suspend fun getTerms(): QuerySnapshot = firestoreSource.getTerms()
 
-    suspend fun getAdmins(): QuerySnapshot = adminsCollectionReference.get().await()
+    suspend fun getAdmins(): QuerySnapshot = firestoreSource.getAdmins()
 
-    suspend fun uploadPlayer(player: Player): DocumentReference = playersCollectionReference.add(player).await()
+    suspend fun uploadPlayer(player: Player): DocumentReference = firestoreSource.uploadPlayer(player)
 
-    suspend fun uploadQuestion(question: Question): DocumentReference = questionsCollectionReference.add(question).await()
+    suspend fun uploadQuestion(question: Question): DocumentReference = firestoreSource.uploadQuestion(question)
 
-    suspend fun uploadTerm(term: Term, extension: String, uri: Uri, contentResolver: ContentResolver) {
-        val bitmap = getThumbnail(uri, contentResolver)
-        bitmap?.let {  image ->
-            val outputStream = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, FIREBASE_STORAGE_IMAGE_QUALITY, outputStream)
-            val data = outputStream.toByteArray()
-            val id = termsCollectionReference.add(term).await().id
-            termsCollectionReference.document(id).update(IMAGE_NAME_FIELD, "$id.$extension")
-            storageReference.child("$IMAGES$id.$extension").putBytes(data).await()
-        }
+    suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreSource.deleteQuestion(documentSnapshot)
+
+    suspend fun deleteTerm(term: Term, documentSnapshot: DocumentSnapshot) {
+        firestoreSource.deleteTerm(documentSnapshot)
+        firebaseStorageSource.deleteImage(term.imageName)
     }
 
-    suspend fun getImageFromStorage(nameWithExtension: String): ByteArray =
-        storageReference.child("$IMAGES$nameWithExtension").getBytes(ONE_MEGABYTE).await()
+    suspend fun uploadTerm(term: Term, uri: Uri, extension: String, contentResolver: ContentResolver) {
+        val id = firestoreSource.uploadTerm(term, extension)
+        firebaseStorageSource.uploadTerm(id, extension, uri, contentResolver)
+    }
 
-    suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = documentSnapshot.reference.delete().await()
+    suspend fun getImageFromStorage(nameWithExtension: String) = firebaseStorageSource.getImageFromStorage(nameWithExtension)
 
-    suspend fun deleteTerm(documentSnapshot: DocumentSnapshot) = documentSnapshot.reference.delete().await()
-
-    suspend fun deleteImage(nameWithExtension: String) = storageReference.child("$IMAGES$nameWithExtension").delete().await()
-
-    suspend fun insertQuestions(questions: List<Question>) = questions.forEach { questionDao.insertQuestion(it) }
+    suspend fun insertQuestions(questions: List<Question>) = questionDao.insertAllQuestions(questions)
 
     suspend fun getQuestionsFromDb(category: Categories) = questionDao.getAllQuestions(category.type)
 
-    suspend fun deleteAllQuestions() = questionDao.deleteAllQuestions()
+    suspend fun replaceAllQuestions(questions: List<Question>) = questionDao.replaceAllQuestions(questions)
 
-    suspend fun insertTerms(terms: List<Term>) = terms.forEach { termDao.insertTerm(it) }
+    suspend fun insertTerms(terms: List<Term>) = termDao.insertAllTerms(terms)
 
     suspend fun getTermsFromDb() = termDao.getAllTerms()
 
-    suspend fun deleteAllTerms() = termDao.deleteAllTerms()
+    suspend fun replaceAllTerms(terms: List<Term>) = termDao.replaceAllTerms(terms)
 }

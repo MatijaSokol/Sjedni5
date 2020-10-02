@@ -13,7 +13,7 @@ import hr.ferit.matijasokol.sjedni5.app.QuizApp
 import hr.ferit.matijasokol.sjedni5.models.Resource
 import hr.ferit.matijasokol.sjedni5.models.Term
 import hr.ferit.matijasokol.sjedni5.repositories.QuizRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -22,16 +22,16 @@ class TermInputViewModel @ViewModelInject constructor(
     private val repository: QuizRepository
 ) : AndroidViewModel(app) {
 
-    private val _uploadStatus = MutableLiveData<Resource<Boolean>>()
+    private val _uploadStatus = MutableLiveData<Resource<Unit>>()
 
-    val uploadStatus: LiveData<Resource<Boolean>>
+    val uploadStatus: LiveData<Resource<Unit>>
         get() = _uploadStatus
 
-    fun uploadTerm(term: Term, extension: String, uri: Uri, contentResolver: ContentResolver) = viewModelScope.launch(Dispatchers.IO) {
+    fun uploadTerm(term: Term, extension: String, uri: Uri, contentResolver: ContentResolver) = viewModelScope.launch(IO) {
         _uploadStatus.postValue(Resource.Loading())
         try {
-            repository.uploadTerm(term, extension, uri, contentResolver)
-            _uploadStatus.postValue(Resource.Success(true))
+            repository.uploadTerm(term, uri, extension, contentResolver)
+            _uploadStatus.postValue(Resource.Success(Unit))
         } catch (t: Throwable) {
             when(t) {
                 is IOException -> _uploadStatus.postValue(

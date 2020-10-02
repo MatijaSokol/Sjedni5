@@ -18,7 +18,6 @@ import hr.ferit.matijasokol.sjedni5.other.*
 import hr.ferit.matijasokol.sjedni5.ui.activities.QuizActivity
 import hr.ferit.matijasokol.sjedni5.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_guess_term.*
-import kotlin.math.max
 import kotlin.math.min
 
 @AndroidEntryPoint

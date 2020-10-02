@@ -1,10 +1,6 @@
-package hr.ferit.matijasokol.sjedni5.db
+package hr.ferit.matijasokol.sjedni5.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import hr.ferit.matijasokol.sjedni5.models.Categories
+import androidx.room.*
 import hr.ferit.matijasokol.sjedni5.models.Question
 import hr.ferit.matijasokol.sjedni5.other.Constants.QUESTIONS_TABLE
 
@@ -12,11 +8,17 @@ import hr.ferit.matijasokol.sjedni5.other.Constants.QUESTIONS_TABLE
 interface QuestionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertQuestion(question: Question): Long
+    suspend fun insertAllQuestions(question: List<Question>)
 
     @Query("SELECT * FROM $QUESTIONS_TABLE WHERE category = :selectedCategory")
     suspend fun getAllQuestions(selectedCategory: String): List<Question>
 
     @Query("DELETE FROM $QUESTIONS_TABLE")
     suspend fun deleteAllQuestions()
+
+    @Transaction
+    suspend fun replaceAllQuestions(questions: List<Question>) {
+        deleteAllQuestions()
+        insertAllQuestions(questions)
+    }
 }

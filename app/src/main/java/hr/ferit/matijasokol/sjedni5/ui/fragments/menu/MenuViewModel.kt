@@ -1,7 +1,6 @@
 package hr.ferit.matijasokol.sjedni5.ui.fragments.menu
 
 import android.app.Application
-import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
@@ -14,11 +13,11 @@ import hr.ferit.matijasokol.sjedni5.app.QuizApp
 import hr.ferit.matijasokol.sjedni5.models.Question
 import hr.ferit.matijasokol.sjedni5.models.Resource
 import hr.ferit.matijasokol.sjedni5.models.Term
-import hr.ferit.matijasokol.sjedni5.other.Constants
 import hr.ferit.matijasokol.sjedni5.other.hasInternetConnection
 import hr.ferit.matijasokol.sjedni5.repositories.QuizRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -27,78 +26,51 @@ class MenuViewModel @ViewModelInject constructor(
     private val repository: QuizRepository
 ) : AndroidViewModel(app) {
 
-    private val _questionResponse = MutableLiveData<Resource<Boolean>>()
+    private val _questionAndTermsResponse = MutableLiveData<Resource<Unit>>()
 
-    val questionResponse: LiveData<Resource<Boolean>>
-        get() = _questionResponse
-
-    private val _termResponse = MutableLiveData<Resource<Boolean>>()
-
-    val termResponse: LiveData<Resource<Boolean>>
-        get() = _termResponse
+    val questionAndTermsResponse: LiveData<Resource<Unit>>
+        get() = _questionAndTermsResponse
 
     fun updateQuestionsAndTerms() = viewModelScope.launch(IO) {
-        async {
-            updateQuestions()
-            updateTerms()
+        if (hasInternetConnection(getApplication())) {
+            _questionAndTermsResponse.postValue(Resource.Loading())
+            try {
+                awaitAll(
+                    async { updateQuestions() },
+                    async { updateTerms() }
+                )
+                _questionAndTermsResponse.postValue(Resource.Success(Unit))
+            } catch (t: Throwable) {
+                when(t) {
+                    is IOException -> _questionAndTermsResponse.postValue(
+                        Resource.Error(getApplication<QuizApp>().getString(
+                            R.string.network_failure
+                        )))
+                    else -> _questionAndTermsResponse.postValue(
+                        Resource.Error(getApplication<QuizApp>().getString(
+                            R.string.conversion_error
+                        )))
+                }
+            }
+        } else {
+            _questionAndTermsResponse.postValue(
+                Resource.Error(getApplication<QuizApp>().getString(R.string.int_conn_need_new_data))
+            )
         }
+
     }
 
     private suspend fun updateQuestions() {
-        if (hasInternetConnection(getApplication())) {
-            _questionResponse.postValue(Resource.Loading())
-            try {
-                val newQuestions = repository.getQuestions().documents.mapNotNull { it.toObject<Question>() }
-                repository.deleteAllQuestions()
-                repository.insertQuestions(newQuestions)
-                _questionResponse.postValue(Resource.Success(true))
-            } catch (t: Throwable) {
-                when(t) {
-                    is IOException -> _questionResponse.postValue(
-                        Resource.Error(getApplication<QuizApp>().getString(
-                            R.string.network_failure
-                        )))
-                    else -> _questionResponse.postValue(
-                        Resource.Error(getApplication<QuizApp>().getString(
-                            R.string.conversion_error
-                        )))
-                }
-            }
-        } else {
-            _questionResponse.postValue(
-                Resource.Error(getApplication<QuizApp>().getString(R.string.int_conn_need_new_data))
-            )
-        }
+        val newQuestions = repository.getQuestions().documents.mapNotNull { it.toObject<Question>() }
+        repository.replaceAllQuestions(newQuestions)
     }
 
     private suspend fun updateTerms() {
-        if (hasInternetConnection(getApplication())) {
-            _termResponse.postValue(Resource.Loading())
-            try {
-                val newTerms = repository.getTerms().documents.mapNotNull { it.toObject<Term>() }
-                newTerms.forEach {  term ->
-                    val array = repository.getImageFromStorage(term.imageName)
-                    term.image = BitmapFactory.decodeByteArray(array, 0, array.size)
-                }
-                repository.deleteAllTerms()
-                repository.insertTerms(newTerms)
-                _termResponse.postValue(Resource.Success(true))
-            } catch (t: Throwable) {
-                when(t) {
-                    is IOException -> _termResponse.postValue(
-                        Resource.Error(getApplication<QuizApp>().getString(
-                            R.string.network_failure
-                        )))
-                    else -> _termResponse.postValue(
-                        Resource.Error(getApplication<QuizApp>().getString(
-                            R.string.conversion_error
-                        )))
-                }
-            }
-        } else {
-            _questionResponse.postValue(
-                Resource.Error(getApplication<QuizApp>().getString(R.string.int_conn_need_new_data))
-            )
+        val newTerms = repository.getTerms().documents.mapNotNull { it.toObject<Term>() }
+        newTerms.forEach {  term ->
+            val array = repository.getImageFromStorage(term.imageName)
+            term.image = BitmapFactory.decodeByteArray(array, 0, array.size)
         }
+        repository.replaceAllTerms(newTerms)
     }
 }

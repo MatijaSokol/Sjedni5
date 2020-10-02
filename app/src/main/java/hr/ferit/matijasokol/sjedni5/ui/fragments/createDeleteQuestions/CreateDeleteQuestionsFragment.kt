@@ -35,8 +35,10 @@ class CreateDeleteQuestionsFragment : BaseFragment(R.layout.fragment_create_dele
 
     private val viewModel: CreateDeleteQuestionsViewModel by viewModels()
 
-    private val questionRecyclerAdapterCategory1 by lazy { getAdapterForQuestionCategory(Categories.CATEGORY_1) }
-    private val questionRecyclerAdapterCategory2 by lazy { getAdapterForQuestionCategory(Categories.CATEGORY_2) }
+    private val questionRecyclerAdapterCategory1 by lazy { getAdapterForQuestionCategory(
+        Categories.CATEGORY_1) }
+    private val questionRecyclerAdapterCategory2 by lazy { getAdapterForQuestionCategory(
+        Categories.CATEGORY_2) }
     private val termsRecyclerAdapter by lazy { getAdapterForTermCategory() }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

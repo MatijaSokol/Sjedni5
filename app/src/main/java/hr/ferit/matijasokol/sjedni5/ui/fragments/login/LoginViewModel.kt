@@ -13,6 +13,7 @@ import hr.ferit.matijasokol.sjedni5.models.Admin
 import hr.ferit.matijasokol.sjedni5.models.Resource
 import hr.ferit.matijasokol.sjedni5.repositories.QuizRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -26,7 +27,7 @@ class LoginViewModel @ViewModelInject constructor(
     val uploadStatus: LiveData<Resource<Boolean>>
         get() = _uploadStatus
 
-    fun checkForAdmin(admin: Admin) = viewModelScope.launch(Dispatchers.IO) {
+    fun checkForAdmin(admin: Admin) = viewModelScope.launch(IO) {
         _uploadStatus.postValue(Resource.Loading())
         try {
             val querySnapshot = repository.getAdmins()

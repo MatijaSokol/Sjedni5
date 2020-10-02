@@ -2,7 +2,6 @@ package hr.ferit.matijasokol.sjedni5.ui.fragments.guessTerm
 
 import android.app.Application
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -75,7 +74,6 @@ class GuessTermViewModel @ViewModelInject constructor(
                         val array = repository.getImageFromStorage(term.imageName)
                         term.image = BitmapFactory.decodeByteArray(array, 0, array.size)
                     }
-                    repository.deleteAllTerms()
                     repository.insertTerms(terms)
                     val newTerms = repository.getTermsFromDb()
                     _terms.postValue(Resource.Success(newTerms))

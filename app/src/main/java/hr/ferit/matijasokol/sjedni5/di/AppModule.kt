@@ -3,15 +3,20 @@ package hr.ferit.matijasokol.sjedni5.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import hr.ferit.matijasokol.sjedni5.db.QuizDatabase
+import hr.ferit.matijasokol.sjedni5.data.db.QuizDatabase
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageSource
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreSource
+import hr.ferit.matijasokol.sjedni5.other.Constants
 import hr.ferit.matijasokol.sjedni5.other.Constants.ADMINS_COLLECTION
 import hr.ferit.matijasokol.sjedni5.other.Constants.DB_NAME
 import hr.ferit.matijasokol.sjedni5.other.Constants.INSTRUCTIONS_KEY
@@ -72,4 +77,22 @@ object AppModule {
     @Singleton
     @Provides
     fun provideInstructionsEnabled(sharedPref: SharedPreferences) = sharedPref.getBoolean(INSTRUCTIONS_KEY, true)
+
+    @Singleton
+    @Provides
+    fun provideFirestoreSource(
+        @Named(QUESTION_COLLECTION) questionsCollectionReference: CollectionReference,
+        @Named(PLAYERS_COLLECTION) playersCollectionReference: CollectionReference,
+        @Named(TERMS_COLLECTION) termsCollectionReference: CollectionReference,
+        @Named(ADMINS_COLLECTION) adminsCollectionReference: CollectionReference
+    ) = FirestoreSource(
+        questionsCollectionReference,
+        playersCollectionReference,
+        termsCollectionReference,
+        adminsCollectionReference
+    )
+
+    @Singleton
+    @Provides
+    fun provideFirebaseStorageSource(storageReference: StorageReference) = FirebaseStorageSource(storageReference)
 }
