@@ -11,6 +11,8 @@ import hr.ferit.matijasokol.sjedni5.models.Player
 import hr.ferit.matijasokol.sjedni5.other.invisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.player_row.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RangListRecyclerAdapter(
     options: FirestoreRecyclerOptions<Player>,
@@ -51,12 +53,22 @@ class RangListRecyclerAdapter(
 
         fun bind(player: Player) {
             with(itemView) {
-                val time =  player.time.toDate().toString().reversed().removeRange(6, 19).reversed()
+                val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(player.date)
+                date?.let {
+                    val cal = Calendar.getInstance()
+                    cal.time = it
+                    tvDate.text = itemView.context.getString(
+                        R.string.date,
+                        cal.get(Calendar.DAY_OF_MONTH),
+                        cal.get(Calendar.MONTH) + 1,
+                        cal.get(Calendar.YEAR)
+                    )
+                }
+
 
                 tvName.text = player.name
-                tvScore.text = "${context.getString(R.string.score)}: ${player.score}"
-                tvTime.text = time
-                tvRank.text = "${adapterPosition + 1}."
+                tvScore.text = itemView.context.getString(R.string.score, player.score)
+                tvRank.text = itemView.context.getString(R.string.rank, adapterPosition + 1)
 
                 when (adapterPosition) {
                     0 -> ivMedal.setImageResource(R.drawable.gold_medal)

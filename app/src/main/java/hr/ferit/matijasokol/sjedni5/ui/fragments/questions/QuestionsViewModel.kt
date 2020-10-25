@@ -46,7 +46,7 @@ class QuestionsViewModel @ViewModelInject constructor(
 
     var end = false
 
-    var score = 0f
+    var score = 0
         private set
 
     fun incrementScore() = score++

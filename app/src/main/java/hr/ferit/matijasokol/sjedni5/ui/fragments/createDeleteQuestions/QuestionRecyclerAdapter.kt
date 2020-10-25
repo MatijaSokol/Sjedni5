@@ -34,7 +34,7 @@ class QuestionRecyclerAdapter(
         fun bind(question: Question) {
             with(itemView) {
                 tvQuestion.text = question.text
-                tvCorrectAnswer.text = "${context.getString(R.string.correct_answer)}: ${question.correctAnswer}"
+                tvCorrectAnswer.text = context.getString(R.string.correct_answer, question.correctAnswer)
             }
         }
     }

@@ -1,7 +1,6 @@
 package hr.ferit.matijasokol.sjedni5.ui.fragments.score
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.navArgs
@@ -36,9 +35,9 @@ class ScoreFragment : BaseFragment(R.layout.fragment_score) {
     }
 
     private fun setViews() {
-        tvScore.append(": ${args.score}")
+        tvScore.text = getString(R.string.score, args.score)
 
-        when(args.score.toInt()) {
+        when(args.score) {
             in 0 until 4 -> {
                 ivResultImage.setImageResource(R.drawable.bad_result)
                 tvMessage.text = getString(R.string.you_can_do_it_better)

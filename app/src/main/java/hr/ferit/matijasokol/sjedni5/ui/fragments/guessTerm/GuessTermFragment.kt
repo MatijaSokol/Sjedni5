@@ -5,7 +5,6 @@ import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -18,7 +17,6 @@ import hr.ferit.matijasokol.sjedni5.other.*
 import hr.ferit.matijasokol.sjedni5.ui.activities.QuizActivity
 import hr.ferit.matijasokol.sjedni5.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_guess_term.*
-import kotlin.math.min
 
 @AndroidEntryPoint
 class GuessTermFragment : BaseFragment(R.layout.fragment_guess_term) {
@@ -60,7 +58,7 @@ class GuessTermFragment : BaseFragment(R.layout.fragment_guess_term) {
     }
 
     private fun setObservers() {
-        viewModel.terms.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.terms.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> {
                     progress.visible()
@@ -69,7 +67,6 @@ class GuessTermFragment : BaseFragment(R.layout.fragment_guess_term) {
                     progress.gone()
                     response.data?.let {
                         terms = it.shuffled()
-                        terms = terms.subList(0, min(terms.size, 10))
                         viewModel.incrementTerm()
                         viewModel.decrementMistakes()
                         tvMistakesText.visible()
@@ -86,7 +83,7 @@ class GuessTermFragment : BaseFragment(R.layout.fragment_guess_term) {
             }
         })
 
-        viewModel.currentTerm.observe(viewLifecycleOwner, Observer { currentTermIndex ->
+        viewModel.currentTerm.observe(viewLifecycleOwner, { currentTermIndex ->
             if (currentTermIndex < terms.size) {
                 setActionBarText("${getString(R.string.term)} ${viewModel.currentTermIndex + 1}/${terms.size}")
                 setImageAndRecycler(terms[currentTermIndex])
@@ -95,7 +92,7 @@ class GuessTermFragment : BaseFragment(R.layout.fragment_guess_term) {
             }
         })
 
-        viewModel.mistakes.observe(viewLifecycleOwner, Observer { availableMistakes ->
+        viewModel.mistakes.observe(viewLifecycleOwner, { availableMistakes ->
             if (availableMistakes >= 0) {
                 setMistakesTextView(availableMistakes)
             } else {
@@ -105,7 +102,7 @@ class GuessTermFragment : BaseFragment(R.layout.fragment_guess_term) {
     }
 
     private fun setMistakesTextView(availableMistakes: Int?) {
-        tvMistakesValue.text = " $availableMistakes"
+        tvMistakesValue.text = getString(R.string.available_mistakes, availableMistakes)
 
         if (availableMistakes != 3) {
             val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.bounce)

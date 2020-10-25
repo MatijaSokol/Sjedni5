@@ -36,10 +36,13 @@ class QuizRepository @Inject constructor(
 
     suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreSource.deleteQuestion(documentSnapshot)
 
-    suspend fun deleteTerm(term: Term, documentSnapshot: DocumentSnapshot) {
-        firestoreSource.deleteTerm(documentSnapshot)
-        firebaseStorageSource.deleteImage(term.imageName)
-    }
+    suspend fun undoDeleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreSource.undoDeleteQuestion(documentSnapshot)
+
+    suspend fun deleteTermFromFirestore(documentSnapshot: DocumentSnapshot) = firestoreSource.deleteTerm(documentSnapshot)
+
+    suspend fun deleteTermFromStorage(imageName: String) = firebaseStorageSource.deleteImage(imageName)
+
+    suspend fun undoDeleteTerm(documentSnapshot: DocumentSnapshot) = firestoreSource.undoDeleteTerm(documentSnapshot)
 
     suspend fun uploadTerm(term: Term, uri: Uri, extension: String, contentResolver: ContentResolver) {
         val id = firestoreSource.uploadTerm(term, extension)

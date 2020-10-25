@@ -33,14 +33,5 @@ data class Question(
     }
 
     @Exclude
-    fun isCorrectAnswerInAnswers(): Boolean {
-        if (answer1 == correctAnswer || answer2 == correctAnswer || answer3 == correctAnswer || answer4 == correctAnswer) {
-            return true
-        }
-
-        return false
-    }
-
-    @Exclude
     fun isUrlValid() = Patterns.WEB_URL.matcher(url).matches()
 }

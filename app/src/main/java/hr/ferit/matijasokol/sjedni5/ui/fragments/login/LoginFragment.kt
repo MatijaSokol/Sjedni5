@@ -2,7 +2,6 @@ package hr.ferit.matijasokol.sjedni5.ui.fragments.login
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import hr.ferit.matijasokol.sjedni5.R
@@ -30,7 +29,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
     }
 
     private fun setObservers() {
-        viewModel.uploadStatus.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.uploadStatus.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> {
                     progress.visible()

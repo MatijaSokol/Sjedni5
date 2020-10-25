@@ -16,7 +16,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import hr.ferit.matijasokol.sjedni5.data.db.QuizDatabase
 import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageSource
 import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreSource
-import hr.ferit.matijasokol.sjedni5.other.Constants
 import hr.ferit.matijasokol.sjedni5.other.Constants.ADMINS_COLLECTION
 import hr.ferit.matijasokol.sjedni5.other.Constants.DB_NAME
 import hr.ferit.matijasokol.sjedni5.other.Constants.INSTRUCTIONS_KEY

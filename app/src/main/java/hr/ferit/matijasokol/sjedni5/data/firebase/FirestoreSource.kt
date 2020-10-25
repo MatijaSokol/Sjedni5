@@ -4,6 +4,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObject
 import hr.ferit.matijasokol.sjedni5.models.Player
 import hr.ferit.matijasokol.sjedni5.models.Question
 import hr.ferit.matijasokol.sjedni5.models.Term
@@ -41,5 +42,19 @@ class FirestoreSource @Inject constructor(
 
     suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = documentSnapshot.reference.delete().await()
 
+    suspend fun undoDeleteQuestion(documentSnapshot: DocumentSnapshot) {
+        val question = documentSnapshot.toObject<Question>()
+        question?.let {
+            documentSnapshot.reference.set(it).await()
+        }
+    }
+
     suspend fun deleteTerm(documentSnapshot: DocumentSnapshot) = documentSnapshot.reference.delete().await()
+
+    suspend fun undoDeleteTerm(documentSnapshot: DocumentSnapshot) {
+        val term = documentSnapshot.toObject<Term>()
+        term?.let {
+            documentSnapshot.reference.set(it).await()
+        }
+    }
 }

@@ -8,19 +8,22 @@ import hr.ferit.matijasokol.sjedni5.other.Constants.DIALOG_KEY
 import hr.ferit.matijasokol.sjedni5.other.Constants.SCORE_KEY
 import hr.ferit.matijasokol.sjedni5.other.gone
 import hr.ferit.matijasokol.sjedni5.other.visible
-import kotlinx.android.synthetic.main.fragment_rank.*
+import hr.ferit.matijasokol.sjedni5.ui.fragments.ranking.adapters.RangListRecyclerAdapter
+import kotlinx.android.synthetic.main.fragment_rang.*
 
-class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rank) {
+class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rang) {
 
-    private val rangListRecyclerAdapter by lazy { getRangListAdapter(Categories.CATEGORY_2.type) { onDataChanged(it) } }
+    private var rangListRecyclerAdapter: RangListRecyclerAdapter? = null
+    private var updatedRangListRecyclerAdapter: RangListRecyclerAdapter? = null
     private var firstRun = true
-    private var score: Float? = null
+    private var score: Int? = null
 
     override fun setUpUi() {
-        setRecycler()
+        rangListRecyclerAdapter = getRangListAdapter(Categories.CATEGORY_2.type) { onDataChanged(it) }
+        setRecycler(rangListRecyclerAdapter)
 
         val shouldOpenDialog = arguments?.getBoolean(DIALOG_KEY) ?: false
-        score = arguments?.getFloat(SCORE_KEY)
+        score = arguments?.getInt(SCORE_KEY)
 
         if (shouldOpenDialog && firstRun) {
             firstRun = false
@@ -28,9 +31,10 @@ class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rank) {
         }
     }
 
-    private fun setRecycler() {
+    override fun setRecycler(adapter: RangListRecyclerAdapter?) {
         recycler.apply {
-            adapter = rangListRecyclerAdapter
+            this.adapter = adapter
+            itemAnimator = null
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
         }
@@ -38,34 +42,58 @@ class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rank) {
 
     override fun onStart() {
         super.onStart()
-        rangListRecyclerAdapter.startListening()
+        rangListRecyclerAdapter?.startListening() ?: updatedRangListRecyclerAdapter?.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        rangListRecyclerAdapter.stopListening()
+        rangListRecyclerAdapter?.stopListening() ?: updatedRangListRecyclerAdapter?.stopListening()
     }
 
-    private fun onDataChanged(itemCount: Int) {
+    private fun onDataChanged(itemCount: Int, filtered: Boolean = false, date: String = "") {
+        val values = date.split("-")
         if (itemCount == 0) {
-            tvEmptyList.visible()
+            tvEmptyList?.visible()
+            tvEmptyList?.text = if (filtered) {
+                getString(R.string.empty_list_with_date, values[2].toInt(), values[1].toInt(), values[0].toInt())
+            } else {
+                getString(R.string.empty_list)
+            }
         } else {
-            tvEmptyList.gone()
+            tvEmptyList?.gone()
         }
     }
 
     override fun onPlayerAdded() {
-        rangListRecyclerAdapter.notifyForMedalImages()
+        rangListRecyclerAdapter?.notifyForMedalImages()
         recycler.smoothScrollToPosition(0)
     }
 
+    override fun applyDateFilter(date: String) {
+        rangListRecyclerAdapter?.stopListening()
+        rangListRecyclerAdapter = null
+        updatedRangListRecyclerAdapter = null
+        updatedRangListRecyclerAdapter = getUpdatedRangListAdapter(date, Categories.CATEGORY_2) { onDataChanged(it) }
+        updatedRangListRecyclerAdapter?.startListening()
+        setRecycler(updatedRangListRecyclerAdapter)
+        onDataChanged(updatedRangListRecyclerAdapter!!.itemCount, true, date)
+    }
+
+    override fun setInitialList() {
+        if (rangListRecyclerAdapter == null) {
+            rangListRecyclerAdapter = getRangListAdapter(Categories.CATEGORY_2.type) { onDataChanged(it) }
+            updatedRangListRecyclerAdapter?.stopListening()
+            updatedRangListRecyclerAdapter = null
+            rangListRecyclerAdapter?.startListening()
+            setRecycler(rangListRecyclerAdapter)
+        }
+    }
+
     companion object {
-        fun newInstance(shouldOpenDialog: Boolean, score: Float? = null) = Category2Fragment().apply {
+        fun newInstance(shouldOpenDialog: Boolean, score: Int? = null) = Category2Fragment().apply {
             arguments = Bundle().apply {
                 putBoolean(DIALOG_KEY, shouldOpenDialog)
-                if (score != null) {
-                    putFloat(SCORE_KEY, score)
-                }
+                score?.let { putInt(SCORE_KEY, it) }
             }
         }
     }

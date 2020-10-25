@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/joker"
+        android:id="@+id/calendar"
         app:showAsAction="always"
-        android:title="@string/calendar"
-        android:icon="@drawable/ic_joker" />
+        android:title="@string/joker"
+        android:icon="@drawable/ic_calendar" />
 
 </menu>

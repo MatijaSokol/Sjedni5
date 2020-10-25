@@ -15,7 +15,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +30,6 @@ import hr.ferit.matijasokol.sjedni5.ui.base.BaseFragment
 import hr.ferit.matijasokol.sjedni5.ui.fragments.info.InfoBottomSheet
 import hr.ferit.matijasokol.sjedni5.ui.fragments.jokers.JokerBottomSheet
 import kotlinx.android.synthetic.main.fragment_question.*
-import kotlin.math.min
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
@@ -112,7 +110,7 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
     }
 
     private fun setObservers() {
-        viewModel.questions.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.questions.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> {
                     progress.visible()
@@ -122,7 +120,7 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
                     response.data?.let {
                         questions = it.shuffled()
                         jokerQuestion = questions.last()
-                        questions = questions.subList(0, min(questions.size - 1, 10))
+                        questions = questions.subList(0, questions.size - 1)
                         questions.sortedBy { question -> question.level}
                         viewModel.incrementCurrentQuestion()
                     }
@@ -137,7 +135,7 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
             }
         })
 
-        viewModel.questionCounter.observe(viewLifecycleOwner, Observer { questionIndex ->
+        viewModel.questionCounter.observe(viewLifecycleOwner, { questionIndex ->
             if (questionIndex < questions.size) {
                 setQuestion(questions[questionIndex])
                 setActionBarText("${getString(R.string.question)} ${viewModel.currentQuestion + 1}/${questions.size}")
@@ -151,8 +149,6 @@ class QuestionFragment : BaseFragment(R.layout.fragment_question) {
     }
 
     private fun findCorrectAnswerIndex() = answers.indexOfFirst { it.button.text == questions[viewModel.currentQuestion].correctAnswer }
-
-    private val TAG = "[DEBUG] QuestionFra"
 
     private fun onFirstJokerClicked() {
         requireContext().displayMessage(getString(R.string.half_half_joker_used))

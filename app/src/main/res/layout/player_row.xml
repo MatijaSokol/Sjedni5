@@ -53,7 +53,7 @@
             android:layout_marginEnd="8dp" />
 
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"

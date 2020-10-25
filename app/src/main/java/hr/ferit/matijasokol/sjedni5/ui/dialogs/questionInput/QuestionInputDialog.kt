@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import hr.ferit.matijasokol.sjedni5.R
 import hr.ferit.matijasokol.sjedni5.models.Question
@@ -41,7 +40,7 @@ class QuestionInputDialog : DialogFragment() {
     }
 
     private fun setObservers() {
-        viewModel.uploadStatus.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.uploadStatus.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> {
                     progress.visible()
@@ -71,14 +70,21 @@ class QuestionInputDialog : DialogFragment() {
             else -> CATEGORY_2
         }
 
+        val correctAnswer = when(rgCorrectAnswer.checkedRadioButtonId) {
+            rbCorrectAnswer1.id -> etAnswer1.text.toString().trim()
+            rbCorrectAnswer2.id -> etAnswer2.text.toString().trim()
+            rbCorrectAnswer3.id -> etAnswer3.text.toString().trim()
+            else -> etAnswer4.text.toString().trim()
+        }
+
         val question = Question(
             etQuestionText.text.toString(),
-            etAnswer1.text.toString(),
-            etAnswer2.text.toString(),
-            etAnswer3.text.toString(),
-            etAnswer4.text.toString(),
-            etCorrectAnswer.text.toString(),
-            etUrl.text.toString(),
+            etAnswer1.text.toString().trim(),
+            etAnswer2.text.toString().trim(),
+            etAnswer3.text.toString().trim(),
+            etAnswer4.text.toString().trim(),
+            correctAnswer,
+            etUrl.text.toString().trim(),
             category,
             spLevel.selectedItem.toString().toInt()
         )
@@ -93,11 +99,6 @@ class QuestionInputDialog : DialogFragment() {
     private fun isQuestionValid(question: Question): Boolean {
         if (question.isSomePropertyEmpty()) {
             requireContext().displayMessage(getString(R.string.inputs_empty))
-            return false
-        }
-
-        if (!question.isCorrectAnswerInAnswers()) {
-            requireContext().displayMessage(getString(R.string.correct_answer_not_valid))
             return false
         }
 

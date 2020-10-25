@@ -19,6 +19,6 @@ class ObservableWebView : WebView {
     }
 
     interface OnScrollChangeListener {
-        fun onScrollChanged(currentHorizontalScroll: Int, currentVerticalScroll: Int, oldHorizontalScroll: Int, oldcurrentVerticalScroll: Int)
+        fun onScrollChanged(currentHorizontalScroll: Int, currentVerticalScroll: Int, oldHorizontalScroll: Int, oldCurrentVerticalScroll: Int)
     }
 }

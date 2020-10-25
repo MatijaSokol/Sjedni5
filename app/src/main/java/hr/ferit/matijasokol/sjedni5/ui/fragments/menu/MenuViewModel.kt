@@ -5,10 +5,10 @@ import android.graphics.BitmapFactory
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.toObject
 import hr.ferit.matijasokol.sjedni5.R
+import hr.ferit.matijasokol.sjedni5.other.SingleLiveEvent
 import hr.ferit.matijasokol.sjedni5.app.QuizApp
 import hr.ferit.matijasokol.sjedni5.models.Question
 import hr.ferit.matijasokol.sjedni5.models.Resource
@@ -26,7 +26,7 @@ class MenuViewModel @ViewModelInject constructor(
     private val repository: QuizRepository
 ) : AndroidViewModel(app) {
 
-    private val _questionAndTermsResponse = MutableLiveData<Resource<Unit>>()
+    private val _questionAndTermsResponse = SingleLiveEvent<Resource<Unit>>()
 
     val questionAndTermsResponse: LiveData<Resource<Unit>>
         get() = _questionAndTermsResponse

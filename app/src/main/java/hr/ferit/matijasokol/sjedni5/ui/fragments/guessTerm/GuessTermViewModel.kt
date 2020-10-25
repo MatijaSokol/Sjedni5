@@ -43,7 +43,7 @@ class GuessTermViewModel @ViewModelInject constructor(
     val mistakes: LiveData<Int>
         get() = _mistakes
 
-    var score = 0f
+    var score = 0
         private set
 
     fun incrementScore() {

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import hr.ferit.matijasokol.sjedni5.R
 import hr.ferit.matijasokol.sjedni5.models.Categories
@@ -23,7 +22,7 @@ class PlayerInputDialog : DialogFragment() {
 
     private val viewModel: PlayersViewModel by viewModels()
 
-    private var score = 0f
+    private var score = 0
     private lateinit var category: Categories
     private lateinit var onPlayerAdded: () -> Unit
 
@@ -49,7 +48,7 @@ class PlayerInputDialog : DialogFragment() {
         setObservers()
     }
 
-    fun setScore(score: Float) {
+    fun setScore(score: Int) {
         this.score = score
     }
 
@@ -62,7 +61,7 @@ class PlayerInputDialog : DialogFragment() {
     }
 
     private fun setObservers() {
-        viewModel.uploadStatus.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.uploadStatus.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> {
                     progressInput.visible()

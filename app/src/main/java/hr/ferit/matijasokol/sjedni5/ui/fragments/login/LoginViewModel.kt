@@ -12,7 +12,6 @@ import hr.ferit.matijasokol.sjedni5.app.QuizApp
 import hr.ferit.matijasokol.sjedni5.models.Admin
 import hr.ferit.matijasokol.sjedni5.models.Resource
 import hr.ferit.matijasokol.sjedni5.repositories.QuizRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.io.IOException

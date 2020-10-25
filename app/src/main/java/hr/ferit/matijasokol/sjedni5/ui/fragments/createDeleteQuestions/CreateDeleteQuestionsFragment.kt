@@ -3,11 +3,11 @@ package hr.ferit.matijasokol.sjedni5.ui.fragments.createDeleteQuestions
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -63,11 +63,13 @@ class CreateDeleteQuestionsFragment : BaseFragment(R.layout.fragment_create_dele
     }
 
     private fun setObservers() {
-        viewModel.questionDeleteResponse.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.questionDeleteResponse.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> { /* NO-OP*/ }
                 is Resource.Success -> {
-                    rootElement.showSnackbar(getString(R.string.question_deleted))
+                    response.data?.let {
+                        showSnackbarForQuestions(it)
+                    }
                 }
                 is Resource.Error -> {
                     response.message?.let {
@@ -77,11 +79,13 @@ class CreateDeleteQuestionsFragment : BaseFragment(R.layout.fragment_create_dele
             }
         })
 
-        viewModel.termDeleteResponse.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.termDeleteResponse.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> { /* NO-OP*/ }
                 is Resource.Success -> {
-                    rootElement.showSnackbar(getString(R.string.term_deleted))
+                    response.data?.let {
+                        showSnackbarForTerms(it)
+                    }
                 }
                 is Resource.Error -> {
                     response.message?.let {
@@ -215,15 +219,38 @@ class CreateDeleteQuestionsFragment : BaseFragment(R.layout.fragment_create_dele
                 viewModel.deleteQuestion(questionRecyclerAdapterCategory2.getItemSnapshot(position))
             }
             R.id.rbCategory3 -> {
-                val doc = termsRecyclerAdapter.getItemSnapshot(position)
-                val term = doc.toObject<Term>()
-                term?.let {
-                    viewModel.deleteTerm(it, doc)
-                }
+                viewModel.deleteTermFromFirestore(termsRecyclerAdapter.getItemSnapshot(position))
             }
         }
     }
 
+    private fun showSnackbarForQuestions(documentSnapshot: DocumentSnapshot) {
+        Snackbar.make(rootElement, getString(R.string.question_deleted), Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.undo)) {
+                viewModel.undoDeleteQuestion(documentSnapshot)
+            }.show()
+    }
+
+    private fun showSnackbarForTerms(documentSnapshot: DocumentSnapshot) {
+        var delete = true
+
+        val snackbar = Snackbar.make(rootElement, getString(R.string.term_deleted), Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.undo)) {
+                viewModel.undoDeleteTerm(documentSnapshot)
+                delete = false
+            }
+
+        snackbar.show()
+        snackbar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                val term = documentSnapshot.toObject<Term>()
+                if (delete && term != null) {
+                    viewModel.deleteTermFromStorage(term.imageName)
+                }
+            }
+        })
+    }
 
     override fun onStart() {
         super.onStart()

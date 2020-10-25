@@ -8,7 +8,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose joker"
+        android:text="@string/choose_joker"
         android:layout_margin="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="50 %"
+        android:text="@string/_50"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="@+id/iv1"
         app:layout_constraintStart_toStartOf="@+id/iv1"
@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Skip"
+        android:text="@string/skip"
         app:layout_constraintEnd_toEndOf="@+id/iv2"
         app:layout_constraintStart_toStartOf="@+id/iv2"
         app:layout_constraintTop_toBottomOf="@+id/iv2" />
@@ -101,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Swap"
+        android:text="@string/swap"
         app:layout_constraintEnd_toEndOf="@+id/iv3"
         app:layout_constraintStart_toStartOf="@+id/iv3"
         app:layout_constraintTop_toBottomOf="@+id/iv3" />

@@ -1,12 +1,18 @@
 package hr.ferit.matijasokol.sjedni5.ui.activities
 
+import android.content.SharedPreferences
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import javax.inject.Inject
+import androidx.lifecycle.viewModelScope
+import hr.ferit.matijasokol.sjedni5.other.Constants
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
-class QuizViewModel @ViewModelInject constructor() : ViewModel() {
+class QuizViewModel @ViewModelInject constructor(
+    private val sharedPreferences: SharedPreferences
+) : ViewModel() {
 
     private val _title = MutableLiveData<String>()
 
@@ -15,5 +21,12 @@ class QuizViewModel @ViewModelInject constructor() : ViewModel() {
 
     fun setTitle(title: String) {
         _title.postValue(title)
+    }
+
+    fun saveInstructionsEnabled(enabled: Boolean) = viewModelScope.launch(IO) {
+        sharedPreferences
+            .edit()
+            .putBoolean(Constants.INSTRUCTIONS_KEY, enabled)
+            .apply()
     }
 }

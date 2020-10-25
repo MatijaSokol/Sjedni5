@@ -10,14 +10,16 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import hr.ferit.matijasokol.sjedni5.R
 import hr.ferit.matijasokol.sjedni5.models.Resource
 import hr.ferit.matijasokol.sjedni5.models.Term
-import hr.ferit.matijasokol.sjedni5.other.*
 import hr.ferit.matijasokol.sjedni5.other.Constants.IMAGE_TYPE
 import hr.ferit.matijasokol.sjedni5.other.Constants.REQUEST_CODE_IMAGE_PICK
+import hr.ferit.matijasokol.sjedni5.other.displayMessage
+import hr.ferit.matijasokol.sjedni5.other.getUriExtension
+import hr.ferit.matijasokol.sjedni5.other.invisible
+import hr.ferit.matijasokol.sjedni5.other.visible
 import kotlinx.android.synthetic.main.dialog_add_term.*
 
 @AndroidEntryPoint
@@ -41,7 +43,7 @@ class TermInputDialog : DialogFragment() {
     }
 
     private fun setObservers() {
-        viewModel.uploadStatus.observe(viewLifecycleOwner, Observer {  response ->
+        viewModel.uploadStatus.observe(viewLifecycleOwner, {  response ->
             when(response) {
                 is Resource.Loading -> {
                     progress.visible()

@@ -1,10 +1,11 @@
 package hr.ferit.matijasokol.sjedni5.models
 
-import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Player(
     val name: String = "",
-    val score: Float = 0f,
+    val score: Int = 0,
     val category: String = "",
-    val time: Timestamp = Timestamp.now()
+    val date: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().time)
 )

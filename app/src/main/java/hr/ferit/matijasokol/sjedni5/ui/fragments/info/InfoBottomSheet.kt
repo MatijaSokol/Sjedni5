@@ -57,7 +57,7 @@ class InfoBottomSheet(context: Context) : FrameLayout(context) {
             onScrollChangedCallback = object :
                 ObservableWebView.OnScrollChangeListener {
                 override fun onScrollChanged(currentHorizontalScroll: Int, currentVerticalScroll: Int,
-                                             oldHorizontalScroll: Int, oldcurrentVerticalScroll: Int) {
+                                             oldHorizontalScroll: Int, oldCurrentVerticalScroll: Int) {
                     mCurrentWebViewScrollY = currentVerticalScroll
                 }
             }

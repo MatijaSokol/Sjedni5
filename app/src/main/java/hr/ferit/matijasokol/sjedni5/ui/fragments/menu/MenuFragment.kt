@@ -4,14 +4,12 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import hr.ferit.matijasokol.sjedni5.R
 import hr.ferit.matijasokol.sjedni5.models.Categories
 import hr.ferit.matijasokol.sjedni5.models.Resource
 import hr.ferit.matijasokol.sjedni5.other.*
-import hr.ferit.matijasokol.sjedni5.other.Constants.INSTRUCTIONS_KEY
 import hr.ferit.matijasokol.sjedni5.ui.activities.QuizActivity
 import hr.ferit.matijasokol.sjedni5.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_menu.*
@@ -82,20 +80,18 @@ class MenuFragment : BaseFragment(R.layout.fragment_menu) {
     }
 
     private fun saveToPrefs(checked: Boolean) {
-        (requireActivity() as QuizActivity).sharedPrefs
-            .edit()
-            .putBoolean(INSTRUCTIONS_KEY, checked)
-            .apply()
+        (requireActivity() as QuizActivity).viewModel.saveInstructionsEnabled(checked)
     }
 
     private fun setObservers() {
-        viewModel.questionAndTermsResponse.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.questionAndTermsResponse.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Loading -> {
                     progress.visible()
                 }
                 is Resource.Success -> {
                     progress.gone()
+                    rootElement.showSnackbar(getString(R.string.questions_terms_updated), Snackbar.LENGTH_LONG)
                 }
                 is Resource.Error -> {
                     progress.gone()

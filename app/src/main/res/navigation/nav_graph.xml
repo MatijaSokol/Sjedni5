@@ -70,8 +70,8 @@
         tools:layout="@layout/fragment_rank_pager">
         <argument
             android:name="score"
-            app:argType="float"
-            android:defaultValue="-1.0" />
+            app:argType="integer"
+            android:defaultValue="-1" />
         <action
             android:id="@+id/action_rangListFragment_to_menuFragment"
             app:destination="@id/menuFragment"
@@ -100,8 +100,8 @@
             app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="score"
-            app:argType="float"
-            android:defaultValue="0.0" />
+            app:argType="integer"
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_scoreFragment_to_menuFragment"
             app:destination="@id/menuFragment"

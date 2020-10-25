@@ -18,6 +18,9 @@ import hr.ferit.matijasokol.sjedni5.ui.fragments.ranking.adapters.RangListRecycl
 abstract class BaseCategoryFragment(layoutResourceId: Int) : BaseFragment(layoutResourceId) {
 
     abstract fun onPlayerAdded()
+    abstract fun setRecycler(adapter: RangListRecyclerAdapter?)
+    abstract fun applyDateFilter(date: String)
+    abstract fun setInitialList()
 
     protected fun getRangListAdapter(category: String, onDataChanged: (Int) -> Unit): RangListRecyclerAdapter {
         val query = Firebase.firestore
@@ -35,7 +38,7 @@ abstract class BaseCategoryFragment(layoutResourceId: Int) : BaseFragment(layout
         )
     }
 
-    protected fun openDialog(score: Float?, category: Categories) {
+    protected fun openDialog(score: Int?, category: Categories) {
         if (hasInternetConnection(requireContext())) {
             val dialog = PlayerInputDialog.newInstance()
             score?.let {
@@ -49,5 +52,19 @@ abstract class BaseCategoryFragment(layoutResourceId: Int) : BaseFragment(layout
         } else {
             requireContext().displayMessage(getString(R.string.int_conn_need_submit_result), Toast.LENGTH_LONG)
         }
+    }
+
+    protected fun getUpdatedRangListAdapter(date: String, category: Categories, onDataChanged: (Int) -> Unit): RangListRecyclerAdapter {
+        val query = Firebase.firestore
+            .collection(Constants.PLAYERS_COLLECTION)
+            .whereEqualTo(Constants.CATEGORY_FIELD, category.type)
+            .whereEqualTo(Constants.DATE_FIELD, date)
+            .orderBy(Constants.SCORE_FIELD, Query.Direction.DESCENDING)
+
+        val options = FirestoreRecyclerOptions.Builder<Player>()
+            .setQuery(query, Player::class.java)
+            .build()
+
+        return RangListRecyclerAdapter(options, onDataChanged)
     }
 }
