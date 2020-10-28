@@ -12,18 +12,15 @@ import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
-class FirebaseStorageSource @Inject constructor(
+class FirebaseStorageService @Inject constructor(
     private val storageReference: StorageReference
 ) {
 
-    suspend fun uploadTerm(id: String, extension: String, uri: Uri, contentResolver: ContentResolver) {
-        val bitmap = getThumbnail(uri, contentResolver)
-        bitmap?.let {  image ->
-            val outputStream = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, FIREBASE_STORAGE_IMAGE_QUALITY, outputStream)
-            val data = outputStream.toByteArray()
-            storageReference.child("${IMAGES}$id.$extension").putBytes(data).await()
-        }
+    suspend fun uploadTerm(id: String, extension: String, uri: Uri, contentResolver: ContentResolver) = getThumbnail(uri, contentResolver)?.let {
+        val outputStream = ByteArrayOutputStream()
+        it.compress(Bitmap.CompressFormat.JPEG, FIREBASE_STORAGE_IMAGE_QUALITY, outputStream)
+        val data = outputStream.toByteArray()
+        storageReference.child("${IMAGES}$id.$extension").putBytes(data).await()
     }
 
     suspend fun deleteImage(nameWithExtension: String) = storageReference.child("${IMAGES}$nameWithExtension").delete().await()

@@ -81,4 +81,11 @@
     <string name="_50">50 %</string>
     <string name="skip">Prekoči</string>
     <string name="swap">Zamjeni</string>
+    <string name="delete_players">Obriši igrače</string>
+    <string name="delete_all_players">Obrisati sve igrače?</string>
+    <string name="players_permanently_deleted">Svi igrači će biti trajno izbrisani</string>
+    <string name="players_deleted">Igrači su obrisani</string>
+    <string name="working">Molim pričekajte…</string>
+    <string name="players_collection_empty">Lista igrača je već prazna</string>
+
 </resources>

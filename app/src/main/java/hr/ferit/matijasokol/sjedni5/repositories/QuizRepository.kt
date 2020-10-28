@@ -7,8 +7,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import hr.ferit.matijasokol.sjedni5.data.db.QuestionDao
 import hr.ferit.matijasokol.sjedni5.data.db.TermDao
-import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageSource
-import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreSource
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageService
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreService
 import hr.ferit.matijasokol.sjedni5.models.Categories
 import hr.ferit.matijasokol.sjedni5.models.Player
 import hr.ferit.matijasokol.sjedni5.models.Question
@@ -20,36 +20,39 @@ import javax.inject.Singleton
 class QuizRepository @Inject constructor(
     private val questionDao: QuestionDao,
     private val termDao: TermDao,
-    private val firestoreSource: FirestoreSource,
-    private val firebaseStorageSource: FirebaseStorageSource
+    private val firestoreService: FirestoreService,
+    private val firebaseStorageService: FirebaseStorageService
 ) {
 
-    suspend fun getQuestions(): QuerySnapshot = firestoreSource.getQuestions()
+    suspend fun getQuestions(): QuerySnapshot = firestoreService.getQuestions()
 
-    suspend fun getTerms(): QuerySnapshot = firestoreSource.getTerms()
+    suspend fun getTerms(): QuerySnapshot = firestoreService.getTerms()
 
-    suspend fun getAdmins(): QuerySnapshot = firestoreSource.getAdmins()
+    suspend fun getAdmins(): QuerySnapshot = firestoreService.getAdmins()
 
-    suspend fun uploadPlayer(player: Player): DocumentReference = firestoreSource.uploadPlayer(player)
+    suspend fun uploadPlayer(player: Player): DocumentReference = firestoreService.uploadPlayer(player)
 
-    suspend fun uploadQuestion(question: Question): DocumentReference = firestoreSource.uploadQuestion(question)
+    suspend fun getPlayers() = firestoreService.getPlayers()
 
-    suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreSource.deleteQuestion(documentSnapshot)
+    suspend fun deleteAllPlayers(documents: List<DocumentSnapshot>) = firestoreService.deleteAllPlayers(documents)
 
-    suspend fun undoDeleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreSource.undoDeleteQuestion(documentSnapshot)
+    suspend fun uploadQuestion(question: Question): DocumentReference = firestoreService.uploadQuestion(question)
 
-    suspend fun deleteTermFromFirestore(documentSnapshot: DocumentSnapshot) = firestoreSource.deleteTerm(documentSnapshot)
+    suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreService.deleteQuestion(documentSnapshot)
 
-    suspend fun deleteTermFromStorage(imageName: String) = firebaseStorageSource.deleteImage(imageName)
+    suspend fun undoDeleteQuestion(documentSnapshot: DocumentSnapshot) = firestoreService.undoDeleteQuestion(documentSnapshot)
 
-    suspend fun undoDeleteTerm(documentSnapshot: DocumentSnapshot) = firestoreSource.undoDeleteTerm(documentSnapshot)
+    suspend fun deleteTermFromFirestore(documentSnapshot: DocumentSnapshot) = firestoreService.deleteTerm(documentSnapshot)
 
-    suspend fun uploadTerm(term: Term, uri: Uri, extension: String, contentResolver: ContentResolver) {
-        val id = firestoreSource.uploadTerm(term, extension)
-        firebaseStorageSource.uploadTerm(id, extension, uri, contentResolver)
+    suspend fun deleteTermFromStorage(imageName: String) = firebaseStorageService.deleteImage(imageName)
+
+    suspend fun undoDeleteTerm(documentSnapshot: DocumentSnapshot) = firestoreService.undoDeleteTerm(documentSnapshot)
+
+    suspend fun uploadTerm(term: Term, uri: Uri, extension: String, contentResolver: ContentResolver) = firestoreService.uploadTerm(term, extension).also {
+        firebaseStorageService.uploadTerm(it, extension, uri, contentResolver)
     }
 
-    suspend fun getImageFromStorage(nameWithExtension: String) = firebaseStorageSource.getImageFromStorage(nameWithExtension)
+    suspend fun getImageFromStorage(nameWithExtension: String) = firebaseStorageService.getImageFromStorage(nameWithExtension)
 
     suspend fun insertQuestions(questions: List<Question>) = questionDao.insertAllQuestions(questions)
 

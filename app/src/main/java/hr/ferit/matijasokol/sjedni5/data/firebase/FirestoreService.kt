@@ -17,7 +17,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
 
-class FirestoreSource @Inject constructor(
+class FirestoreService @Inject constructor(
     @Named(QUESTION_COLLECTION) private val questionsCollectionReference: CollectionReference,
     @Named(PLAYERS_COLLECTION) private val playersCollectionReference: CollectionReference,
     @Named(TERMS_COLLECTION) private val termsCollectionReference: CollectionReference,
@@ -32,29 +32,27 @@ class FirestoreSource @Inject constructor(
 
     suspend fun uploadPlayer(player: Player): DocumentReference = playersCollectionReference.add(player).await()
 
+    suspend fun getPlayers() = playersCollectionReference.get().await().documents
+
+    suspend fun deleteAllPlayers(documents: List<DocumentSnapshot>) = documents.forEach {
+        it.reference.delete().await()
+    }
+
     suspend fun uploadQuestion(question: Question): DocumentReference = questionsCollectionReference.add(question).await()
 
-    suspend fun uploadTerm(term: Term, extension: String): String {
-        val id = termsCollectionReference.add(term).await().id
-        termsCollectionReference.document(id).update(IMAGE_NAME_FIELD, "$id.$extension").await()
-        return id
+    suspend fun uploadTerm(term: Term, extension: String): String = termsCollectionReference.add(term).await().id.also {
+        termsCollectionReference.document(it).update(IMAGE_NAME_FIELD, "$it.$extension").await()
     }
 
     suspend fun deleteQuestion(documentSnapshot: DocumentSnapshot) = documentSnapshot.reference.delete().await()
 
-    suspend fun undoDeleteQuestion(documentSnapshot: DocumentSnapshot) {
-        val question = documentSnapshot.toObject<Question>()
-        question?.let {
-            documentSnapshot.reference.set(it).await()
-        }
+    suspend fun undoDeleteQuestion(documentSnapshot: DocumentSnapshot) = documentSnapshot.toObject<Question>()?.let {
+        documentSnapshot.reference.set(it).await()
     }
 
     suspend fun deleteTerm(documentSnapshot: DocumentSnapshot) = documentSnapshot.reference.delete().await()
 
-    suspend fun undoDeleteTerm(documentSnapshot: DocumentSnapshot) {
-        val term = documentSnapshot.toObject<Term>()
-        term?.let {
-            documentSnapshot.reference.set(it).await()
-        }
+    suspend fun undoDeleteTerm(documentSnapshot: DocumentSnapshot) = documentSnapshot.toObject<Term>()?.let {
+        documentSnapshot.reference.set(it).await()
     }
 }

@@ -14,8 +14,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hr.ferit.matijasokol.sjedni5.data.db.QuizDatabase
-import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageSource
-import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreSource
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirebaseStorageService
+import hr.ferit.matijasokol.sjedni5.data.firebase.FirestoreService
 import hr.ferit.matijasokol.sjedni5.other.Constants.ADMINS_COLLECTION
 import hr.ferit.matijasokol.sjedni5.other.Constants.DB_NAME
 import hr.ferit.matijasokol.sjedni5.other.Constants.INSTRUCTIONS_KEY
@@ -84,7 +84,7 @@ object AppModule {
         @Named(PLAYERS_COLLECTION) playersCollectionReference: CollectionReference,
         @Named(TERMS_COLLECTION) termsCollectionReference: CollectionReference,
         @Named(ADMINS_COLLECTION) adminsCollectionReference: CollectionReference
-    ) = FirestoreSource(
+    ) = FirestoreService(
         questionsCollectionReference,
         playersCollectionReference,
         termsCollectionReference,
@@ -93,5 +93,5 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseStorageSource(storageReference: StorageReference) = FirebaseStorageSource(storageReference)
+    fun provideFirebaseStorageSource(storageReference: StorageReference) = FirebaseStorageService(storageReference)
 }

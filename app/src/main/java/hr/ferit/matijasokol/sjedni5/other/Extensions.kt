@@ -11,6 +11,8 @@ import android.view.animation.DecelerateInterpolator
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -84,4 +86,19 @@ fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
             Collections.swap(this, i, i - 1)
         }
     }
+}
+
+fun Context.showAlertDialog(
+    @StringRes titleResId: Int,
+    @StringRes messageResId: Int,
+    @StringRes positiveButtonTextResId: Int,
+    @StringRes negativeButtonTextResId: Int,
+    onPositiveButtonClicked: () -> Unit
+) {
+    AlertDialog.Builder(this)
+        .setTitle(titleResId)
+        .setMessage(messageResId)
+        .setPositiveButton(positiveButtonTextResId) { _, _ -> onPositiveButtonClicked() }
+        .setNegativeButton(negativeButtonTextResId) { dialog, _ -> dialog.dismiss() }
+        .show()
 }

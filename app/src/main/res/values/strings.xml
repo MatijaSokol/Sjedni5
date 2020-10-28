@@ -81,6 +81,12 @@
     <string name="_50">50 %</string>
     <string name="skip">Skip</string>
     <string name="swap">Swap</string>
+    <string name="delete_players">Delete players</string>
+    <string name="delete_all_players">Delete all players?</string>
+    <string name="players_permanently_deleted">All players will be permanently deleted</string>
+    <string name="players_deleted">All players are deleted</string>
+    <string name="working">Please wait…</string>
+    <string name="players_collection_empty">Players collection is already empty</string>
 
     <string-array name="categories">
         <item>@string/category1</item>

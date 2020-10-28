@@ -2,10 +2,7 @@ package hr.ferit.matijasokol.sjedni5.ui.fragments.createDeleteQuestions
 
 import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.firestore.DocumentSnapshot
 import hr.ferit.matijasokol.sjedni5.R
 import hr.ferit.matijasokol.sjedni5.app.QuizApp
@@ -28,6 +25,11 @@ class CreateDeleteQuestionsViewModel @ViewModelInject constructor(
 
     val termDeleteResponse: LiveData<Resource<DocumentSnapshot>>
         get() = _termDeleteResponse
+
+    private val _playersDeleteResponse = MutableLiveData<Resource<String>>()
+
+    val playersDeleteResponse: LiveData<Resource<String>>
+        get() = _playersDeleteResponse
 
     fun deleteQuestion(documentSnapshot: DocumentSnapshot) = viewModelScope.launch(IO) {
         try {
@@ -74,6 +76,33 @@ class CreateDeleteQuestionsViewModel @ViewModelInject constructor(
             repository.undoDeleteTerm(documentSnapshot)
         } catch (t: Throwable) {
             /* NO-OP*/
+        }
+    }
+
+    fun checkPlayersCollection() = viewModelScope.launch(IO) {
+        _playersDeleteResponse.postValue(Resource.Loading())
+        try {
+            val players = repository.getPlayers()
+            if (players.isEmpty()) {
+                _playersDeleteResponse.postValue(Resource.Success(getApplication<QuizApp>().getString(R.string.players_collection_empty)))
+            } else {
+                deleteAllPlayers(players)
+            }
+        } catch (t: Throwable) {
+            _playersDeleteResponse.postValue(Resource.Error(getApplication<QuizApp>().getString(
+                R.string.network_failure
+            )))
+        }
+    }
+
+    private fun deleteAllPlayers(documents: List<DocumentSnapshot>) = viewModelScope.launch(IO) {
+        try {
+            repository.deleteAllPlayers(documents)
+            _playersDeleteResponse.postValue(Resource.Success(getApplication<QuizApp>().getString(R.string.players_deleted)))
+        } catch (t: Throwable) {
+            _playersDeleteResponse.postValue(Resource.Error(getApplication<QuizApp>().getString(
+                R.string.network_failure
+            )))
         }
     }
 }

@@ -22,6 +22,7 @@ object Constants {
 
     const val CATEGORY_FIELD = "category"
     const val DATE_FIELD = "date"
+    const val TEXT_FIELD = "text"
 
     const val CATEGORY_1 = "category1"
     const val CATEGORY_2 = "category2"
