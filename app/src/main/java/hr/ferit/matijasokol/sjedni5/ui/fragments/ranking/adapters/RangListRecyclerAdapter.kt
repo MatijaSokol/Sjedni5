@@ -67,7 +67,7 @@ class RangListRecyclerAdapter(
 
 
                 tvName.text = player.name
-                tvScore.text = itemView.context.getString(R.string.score, player.score)
+                tvScore.text = itemView.context.getString(R.string.score_with_number, player.score)
                 tvRank.text = itemView.context.getString(R.string.rank, adapterPosition + 1)
 
                 when (adapterPosition) {

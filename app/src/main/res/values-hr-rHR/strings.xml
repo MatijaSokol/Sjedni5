@@ -6,7 +6,8 @@
     <string name="save">Spremi</string>
     <string name="name">Ime</string>
     <string name="dialog_title">Spremi rezultat</string>
-    <string name="score">Rezultat: %d</string>
+    <string name="score_with_number">Rezultat: %d</string>
+    <string name="score">Rezultat</string>
     <string name="rank">%d.</string>
     <string name="no">Ne</string>
     <string name="yes">Da</string>

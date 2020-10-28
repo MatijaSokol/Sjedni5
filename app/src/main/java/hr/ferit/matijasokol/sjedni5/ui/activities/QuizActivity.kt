@@ -28,7 +28,7 @@ class QuizActivity : BaseActivity(R.layout.activity_quiz) {
             if (menuItem.itemId == R.id.rangListFragment) {
                 val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? NavHostFragment
                 val rangListFragment = navHostFragment?.childFragmentManager?.fragments?.last() as? RangListFragment
-                rangListFragment?.setInitialList()
+                rangListFragment?.setInitialListOrScrollToTop()
             }
         }
 

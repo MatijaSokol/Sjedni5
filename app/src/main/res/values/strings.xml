@@ -6,7 +6,8 @@
     <string name="save">Save</string>
     <string name="name">Name</string>
     <string name="dialog_title">Save your score</string>
-    <string name="score">Score: %d</string>
+    <string name="score_with_number">Score: %d</string>
+    <string name="score">Score</string>
     <string name="rank">%d.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>

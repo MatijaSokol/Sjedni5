@@ -35,7 +35,7 @@ class ScoreFragment : BaseFragment(R.layout.fragment_score) {
     }
 
     private fun setViews() {
-        tvScore.text = getString(R.string.score, args.score)
+        tvScore.text = getString(R.string.score_with_number, args.score)
 
         when(args.score) {
             in 0 until 4 -> {

@@ -141,14 +141,14 @@ class RangListFragment : BaseFragment(R.layout.fragment_rank_pager) {
         (requireActivity() as QuizActivity).viewModel.setTitle(getString(R.string.ranking_with_date, day, month, year))
     }
 
-    fun setInitialList() {
+    fun setInitialListOrScrollToTop() {
         val firstFragment = childFragmentManager.findFragmentByTag("f0") as? Category1Fragment
         val secondFragment = childFragmentManager.findFragmentByTag("f1") as? Category2Fragment
         val thirdFragment = childFragmentManager.findFragmentByTag("f2") as? Category3Fragment
 
-        firstFragment?.setInitialList()
-        secondFragment?.setInitialList()
-        thirdFragment?.setInitialList()
+        firstFragment?.setInitialListOrScrollToTop()
+        secondFragment?.setInitialListOrScrollToTop()
+        thirdFragment?.setInitialListOrScrollToTop()
 
         (requireActivity() as QuizActivity).viewModel.setTitle(getString(R.string.ranking))
     }

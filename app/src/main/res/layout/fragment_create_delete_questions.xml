@@ -1,57 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/rootElement"
     android:background="@drawable/gold_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.createDeleteQuestions.CreateDeleteQuestionsFragment">
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/rbCategory1"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/category1" />
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/rbCategory2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/category2" />
-        <RadioButton
-            android:id="@+id/rbCategory3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/category3" />
+            <RadioButton
+                android:id="@+id/rbCategory1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/category1" />
 
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/rbCategory2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/category2" />
+            <RadioButton
+                android:id="@+id/rbCategory3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/category3" />
 
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorBlack"
-        app:layout_constraintTop_toBottomOf="@id/radioGroup" />
+        </RadioGroup>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/match_constraint"
-        app:layout_constraintTop_toBottomOf="@id/line"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBlack" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -59,7 +61,6 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_plus"
         android:layout_margin="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_gravity="bottom|end" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

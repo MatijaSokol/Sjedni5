@@ -28,6 +28,7 @@ import hr.ferit.matijasokol.sjedni5.ui.activities.QuizActivity
 import hr.ferit.matijasokol.sjedni5.ui.base.BaseFragment
 import hr.ferit.matijasokol.sjedni5.ui.dialogs.questionInput.QuestionInputDialog
 import hr.ferit.matijasokol.sjedni5.ui.dialogs.termInput.TermInputDialog
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.android.synthetic.main.fragment_create_delete_questions.*
 
 @AndroidEntryPoint
@@ -204,6 +205,9 @@ class CreateDeleteQuestionsFragment : BaseFragment(R.layout.fragment_create_dele
         recycler.apply {
             adapter = questionRecyclerAdapterCategory1
             layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = SlideInDownAnimator().apply {
+                addDuration = 200
+            }
             setHasFixedSize(true)
         }
 

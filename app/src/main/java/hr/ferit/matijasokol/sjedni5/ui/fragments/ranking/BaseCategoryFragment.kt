@@ -20,7 +20,7 @@ abstract class BaseCategoryFragment(layoutResourceId: Int) : BaseFragment(layout
     abstract fun onPlayerAdded()
     abstract fun setRecycler(adapter: RangListRecyclerAdapter?)
     abstract fun applyDateFilter(date: String)
-    abstract fun setInitialList()
+    abstract fun setInitialListOrScrollToTop()
 
     protected fun getRangListAdapter(category: String, onDataChanged: (Int) -> Unit): RangListRecyclerAdapter {
         val query = Firebase.firestore

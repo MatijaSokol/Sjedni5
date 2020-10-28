@@ -9,6 +9,8 @@ import hr.ferit.matijasokol.sjedni5.other.Constants.SCORE_KEY
 import hr.ferit.matijasokol.sjedni5.other.gone
 import hr.ferit.matijasokol.sjedni5.other.visible
 import hr.ferit.matijasokol.sjedni5.ui.fragments.ranking.adapters.RangListRecyclerAdapter
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import kotlinx.android.synthetic.main.fragment_rang.*
 
 class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rang) {
@@ -17,6 +19,7 @@ class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rang) {
     private var updatedRangListRecyclerAdapter: RangListRecyclerAdapter? = null
     private var firstRun = true
     private var score: Int? = null
+    private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
 
     override fun setUpUi() {
         rangListRecyclerAdapter = getRangListAdapter(Categories.CATEGORY_2.type) { onDataChanged(it) }
@@ -34,8 +37,10 @@ class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rang) {
     override fun setRecycler(adapter: RangListRecyclerAdapter?) {
         recycler.apply {
             this.adapter = adapter
-            itemAnimator = null
-            layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = SlideInDownAnimator().apply {
+                addDuration = 200
+            }
+            layoutManager = linearLayoutManager
             setHasFixedSize(true)
         }
     }
@@ -76,16 +81,20 @@ class Category2Fragment : BaseCategoryFragment(R.layout.fragment_rang) {
         updatedRangListRecyclerAdapter = getUpdatedRangListAdapter(date, Categories.CATEGORY_2) { onDataChanged(it) }
         updatedRangListRecyclerAdapter?.startListening()
         setRecycler(updatedRangListRecyclerAdapter)
+        updatedRangListRecyclerAdapter?.notifyDataSetChanged()
         onDataChanged(updatedRangListRecyclerAdapter!!.itemCount, true, date)
     }
 
-    override fun setInitialList() {
+    override fun setInitialListOrScrollToTop() {
         if (rangListRecyclerAdapter == null) {
             rangListRecyclerAdapter = getRangListAdapter(Categories.CATEGORY_2.type) { onDataChanged(it) }
             updatedRangListRecyclerAdapter?.stopListening()
             updatedRangListRecyclerAdapter = null
             rangListRecyclerAdapter?.startListening()
             setRecycler(rangListRecyclerAdapter)
+            rangListRecyclerAdapter?.notifyDataSetChanged()
+        } else {
+            linearLayoutManager.smoothScrollToPosition(recycler, null, 0)
         }
     }
 

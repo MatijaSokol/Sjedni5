@@ -115,4 +115,7 @@ dependencies {
 
     // RecyclerView Swipe Decorator
     implementation "it.xabaras.android:recyclerview-swipedecorator:$recycler_swipe_decorator_version"
+
+    // RecyclerView Animator
+    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 }
